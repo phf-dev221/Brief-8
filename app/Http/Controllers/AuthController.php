@@ -17,23 +17,21 @@ class AuthController extends Controller
             'email'=>'required|email',
             'password'=>'required',
         ]);
-        
-        // if(auth()->attempt(['email' => $request->email, 'password' => $request->password])){
 
             if(Auth::guard('association')->attempt(['email'=>$request->email, 'password'=>$request->password])){
+                // $user = Auth::guard('association')->user();
+              
 
-                
-
-                return 'admin'.auth()->user()->nom;
+                return redirect('/dashboard');
             }
-            elseif (Auth::guard('web')->attempt(['email'=>$request->email, 'password'=>$request->password])) {
+            if (Auth::guard('web')->attempt(['email'=>$request->email, 'password'=>$request->password])) {
                  
-
-                return 'user';
+                // $user = Auth::guard('web')->user();
+                return redirect('/');
             }
-            else{
+            
                return  redirect('/');
-            }
+        
           
             
 
