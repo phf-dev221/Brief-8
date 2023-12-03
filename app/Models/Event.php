@@ -18,4 +18,7 @@ class Event extends Model
         'date_evenement',
         'association_id'
     ];
+    public function reservations(){
+        return($this->belongsToMany(Reservation::class));
+    }
 }

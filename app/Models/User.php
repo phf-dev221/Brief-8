@@ -25,9 +25,8 @@ class User extends Authenticatable
         'password',
         'role'
     ];
-    public function isUser()
-    {
-        return $this->role === 'user';
+    public function reservations(){
+        return($this->belongsToMany(Reservation::class));
     }
     /**
      * The attributes that should be hidden for serialization.

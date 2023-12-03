@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Association;
+use App\Models\Reservation;
+use App\Models\User;
+use App\Notifications\DesisterNotif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -21,6 +24,22 @@ class EventController extends Controller
        
         return view('association.dashboard', compact('events'));
     }
+
+    public function index_user()
+    {  //create_reservation/{{$event->id}}
+     if(auth()->check()){
+        $id = auth()->user()->id;
+        $events = Event::all();
+        $reservedEventIds = Reservation::where('user_id', $id)->pluck('event_id')->toArray();
+        return view('user.index', compact('events', 'reservedEventIds'));
+    }else{
+        $events = Event::all();
+        return view('user.index', compact('events'));
+    }
+
+    }
+    
+    
 
     /**
      * Show the form for creating a new resource.
@@ -70,9 +89,9 @@ class EventController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
+    {   $usersReserved = Reservation::where('event_id',$id)->where('is_accepted',true)->get();
         $event = Event::find($id);
-        return view('event.show', compact('event'));
+        return view('event.show', compact('event','usersReserved'));
     }
 
     /**
@@ -126,5 +145,16 @@ class EventController extends Controller
         $event = Event::find($id);
         $event->delete();
         return redirect('/dashboard');
+    }
+
+    public function decliner($id){
+        $reservation = Reservation::find($id);
+        $user=User::find($reservation['user_id']);
+        $reservation['is_accepted']=false;
+
+       if($reservation->update()){
+            $user->notify(new DesisterNotif());
+       }
+        return back();
     }
 }

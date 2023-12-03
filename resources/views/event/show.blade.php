@@ -22,6 +22,27 @@
 
                 <a href="/edit_events/{{$event->id}}" class="btn btn-success">Modifier</a>
                 <a href="/delete_events/{{$event->id}}" class="btn btn-danger">supprimer</a>
+                <hr>
+                <h2 style="text-align:center;margin-top:50px;">Liste des réservations</h2>
+
+                <table class="table">
+                    <tr>
+                        <td>Nom client</td>
+                        <td>Nombre de place</td>
+                        <td>Action</td>
+                    </tr>
+                    @foreach($usersReserved as $user)
+                    <tr>
+                    <td>{{$user->user->name}}</td>
+                    <td>{{$user->nombre_place}}</td>
+                    <td>
+                        <a href="/decliner/{{$user->id}}" class="btn btn-danger">Décliner</a>
+                    </td>
+                    </tr>
+                    @endforeach
+                    </table>
+
+                
 
                 <a href="{{'/dashboard'}}" class="btn btn-info">Retour</a>
     </div>

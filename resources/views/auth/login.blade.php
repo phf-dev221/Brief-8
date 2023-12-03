@@ -28,6 +28,9 @@
            </div>
 
            <button type="submit" class="btn btn-primary">Submit</button>
+           <a href="/register-assoc">s'inscrire comme organisation</a>
+           <p>ou</p>
+           <a href="/register">s'inscrire comme client</a>
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>

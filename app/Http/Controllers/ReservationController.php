@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\Reservation;
 use App\Models\User;
+use App\Notifications\Reservationnotify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class ReservationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,9 +22,9 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view('user.create');
+    public function create($id)
+    {$event = Event::find($id);
+        return view('reservation.create',compact('event'));
     }
 
     /**
@@ -28,24 +32,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user= new User();
+    
         $request->validate([
-            'name'=>'required|min:2|max:20 ',
-            'firstName'=>'required |min:2|max:20',
-            'email'=>'required|email',
-            'phone'=>'required',
-            'password'=>'required',
+            'nombre_place'=>'required',
         ]);
-        $user->name=$request->name;
-        $user->firstName=$request->firstName;
-        $user->email=$request->email;
-        $user->phone=$request->phone;
-        $user->password=$request->password;
-        $user->save();
-       // return 'good';
-        $user->save();
-        return redirect('/');
+        $reservation = new Reservation ();
 
+        $reservation->nombre_place = $request->nombre_place;
+        $reservation->event_id = $request->event_id;
+        $reservation->user_id = $request->user_id;
+        if( $reservation->save()){
+            $user=User::find($request->user_id);
+            $user->notify(new Reservationnotify());
+        };
+        return redirect('/');
     }
 
     /**

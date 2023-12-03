@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
     public function login(){
+
         return view('auth.login');
     }
 
@@ -20,50 +24,31 @@ class AuthController extends Controller
 
             if(Auth::guard('association')->attempt(['email'=>$request->email, 'password'=>$request->password])){
                 // $user = Auth::guard('association')->user();
-              
+
 
                 return redirect('/dashboard');
             }
             if (Auth::guard('web')->attempt(['email'=>$request->email, 'password'=>$request->password])) {
                  
-                // $user = Auth::guard('web')->user();
-                return redirect('/');
+                $user = Auth::guard('web')->user();
+                Session::put('user',$user);
+                
+                // $reservedEventIds = Reservation::where('user_id', $user->id)->where('event_id',$id);
+
+                // if($reservedEventIds){
+                //     return redirect('/index_user');
+                // }
+        
+                return redirect("/create_reservation/$user->id");
             }
             
                return  redirect('/');
-        
-          
-            
+}
 
-            // $user = auth()->user();
-            
-            // dd($user->role);
+public function logout(){
+    $events = Event::all();
+    auth()->logout();
+    return redirect('/');
+}
 
-        //     if ($user->role === 'admin') {
-        //         return 'bonjour';
-
-        //     } else if($user->role === 'user') {
-        //         return 'user';
-
-        //     }
-
-        // }
-        
-        // return back()->withErrors('email et/ou mot de passe incorrect !!!!');
-        
-    }
-
-    // public function authenticate()
-    // {
-    //     if (Auth::guard('web')->check()) {
-    //         // Utilisateur authentifié
-    //         return 'user';
-    //     } elseif (Auth::guard('association')->check()) {
-    //         // Association authentifiée
-    //         return 'admin';
-    //     } else {
-    //         // Ni utilisateur ni association authentifié
-    //         return back(); // ou une autre redirection par défaut
-    //     }
-    // }
 }

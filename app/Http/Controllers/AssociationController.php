@@ -50,10 +50,9 @@ class AssociationController extends Controller
             $file-> move(public_path('/logoAssoc'), $filename);
             $assoc['logo']= $filename;
         }
-
         $assoc->save();
        // return 'good';
-        return view('welcome');
+        return redirect('/dashboard');
     }
 
     /**

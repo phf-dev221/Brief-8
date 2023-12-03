@@ -4,6 +4,8 @@
 <div class="container text-center">
         <div class="row">
             <div class="col s12">
+                <a href="/create-events">Creer un événement</a>
+                <a href="/logout">Déconnexion</a>
                 <h1>Liste des Evenements</h1>
                     <hr>
                     <table class="table">
